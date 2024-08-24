@@ -1,59 +1,59 @@
-//import hook react
+// Import hook react
 import React, { useState, useContext } from "react";
 
-//import hook useNavigate from react router dom
+// Import hook useNavigate from react router dom
 import { useNavigate } from "react-router-dom";
 
-//import services api
+// Import services api
 import api from "../../services/api";
 
-//import js-cookie
+// Import js-cookie
 import Cookies from "js-cookie";
 
-//import context
+// Import context
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Login() {
-  //navigate
+  // Navigate
   const navigate = useNavigate();
 
-  //destructure context "setIsAuthenticated"
+  // Destructure context "setIsAuthenticated"
   const { setIsAuthenticated } = useContext(AuthContext);
 
-  //define state
+  // Define state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  //define state validation
+  // Define state validation
   const [validation, setValidation] = useState([]);
   const [loginFailed, setLoginFailed] = useState([]);
 
-  //function "login"
+  // Function "login"
   const login = async (e) => {
     e.preventDefault();
 
-    //call api login
+    // Call API login
     await api
       .post("/api/login", {
         email: email,
         password: password,
       })
       .then((response) => {
-        //set token and user to cookie
+        // Set token and user to cookie
         Cookies.set("token", response.data.data.token);
         Cookies.set("user", JSON.stringify(response.data.data.user));
 
-        //assign true to state "isAuthenticated"
+        // Assign true to state "isAuthenticated"
         setIsAuthenticated(true);
 
-        //redirect ke halaman dashboard
+        // Redirect to dashboard page
         navigate("/admin/dashboard", { replace: true });
       })
       .catch((error) => {
-        //assign error to state "validation"
+        // Assign error to state "validation"
         setValidation(error.response.data);
 
-        //assign error to state "loginFailed"
+        // Assign error to state "loginFailed"
         setLoginFailed(error.response.data);
       });
   };
@@ -63,7 +63,7 @@ export default function Login() {
       <div className="col-md-4">
         <div className="card border-0 rounded shadow-sm">
           <div className="card-body">
-            <h4>LOGIN</h4>
+            <h4 className="text-center">LOGIN</h4>
             <hr />
             {validation.errors && (
               <div className="alert alert-danger mt-2 pb-0">
@@ -81,13 +81,14 @@ export default function Login() {
             )}
             <form onSubmit={login}>
               <div className="form-group mb-3">
-                <label className="mb-1 fw-bold">Email address</label>
+                <label className="mb-1 fw-bold">Email Address</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="form-control"
                   placeholder="Email Address"
+                  required
                 />
               </div>
 
@@ -99,12 +100,29 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="form-control"
                   placeholder="Password"
+                  required
                 />
               </div>
-              <button type="submit" className="btn btn-primary w-100">
+              <button type="submit" className="btn btn-dark w-100 mb-3">
                 LOGIN
               </button>
             </form>
+
+            <div className="text-center mb-3">
+              <span>Or login with</span>
+            </div>
+
+            <div className="d-flex justify-content-between">
+              <button className="btn btn-outline-dark w-100 me-2">
+                <i className="bi bi-google me-2"></i> Google
+              </button>
+              <button className="btn btn-outline-dark w-100 me-2">
+                <i className="bi bi-facebook me-2"></i> Facebook
+              </button>
+              <button className="btn btn-outline-dark w-100">
+                <i className="bi bi-github me-2"></i> GitHub
+              </button>
+            </div>
           </div>
         </div>
       </div>

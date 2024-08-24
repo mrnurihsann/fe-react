@@ -67,11 +67,6 @@ export default function App() {
         </div>
       </nav>
 
-      <div className="hero-section">
-        <h1>Welcome to Our Application!</h1>
-        <p>Your journey starts here.</p>
-      </div>
-
       <div className="container mt-5">
         <AppRoutes />
       </div>
